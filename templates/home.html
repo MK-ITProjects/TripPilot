@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block navbar_class %}tp-navbar-transparent{% endblock %}
+{% block content %}
+
+<section class="tp-hero-home">
+    {% if featured %}
+    <div id="heroCarousel" class="carousel slide carousel-fade h-100" data-bs-ride="carousel">
+        <div class="carousel-inner h-100">
+            {% for destination in featured %}
+            <div class="carousel-item h-100 {% if forloop.first %}active{% endif %}">
+                <img src="{{ destination.image_url|default:'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1600&q=70' }}" alt="{{ destination.name }}">
+                <div class="tp-hero-overlay"></div>
+                <div class="tp-hero-slide-content">
+                    <div class="container text-center">
+                        <p class="tp-hero-kicker-sm">{{ destination.hero_kicker }}</p>
+                        <h1 class="tp-hero-headline">{{ destination.name }}</h1>
+                        <a href="{% url 'planner:ai_trip_planner' %}?destination={{ destination.id }}" class="btn btn-tp-primary btn-lg mt-2">Explore</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% if featured|length > 1 %}
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+        <div class="tp-hero-slide-counter">
+            <span id="heroSlideCurrent">01</span>/<span id="heroSlideTotal">{{ featured|length|stringformat:"02d" }}</span>
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="tp-hero-overlay-static d-flex align-items-center justify-content-center h-100 text-center text-white">
+        <div class="container">
+            <h1 class="tp-hero-headline">Build a Custom-Fit Travel Itinerary</h1>
+            <p class="mb-0">Load sample destinations to see the full hero: <code>python manage.py loaddata destinations/fixtures/sample_destinations.json</code></p>
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<section class="tp-search-section">
+    <div class="container text-center">
+        <p class="tp-subhead">Search Plans</p>
+        <h2 class="tp-head mb-4">Build Custom Travel Plans</h2>
+
+        <form method="get" action="{% url 'destinations:explore' %}" class="tp-search-bar" id="homeSearchForm">
+            <input type="text" name="q" id="homeSearchInput" class="form-control border-0 shadow-none" placeholder="Where To Next?">
+
+            <i class="fa-solid fa-location-dot text-muted tp-search-static-icon" onclick="document.getElementById('homeSearchInput').focus()"></i>
+            <a href="#categoryCollapse" data-bs-toggle="collapse" class="tp-search-icon-btn" title="Categories" role="button" aria-expanded="false" aria-controls="categoryCollapse">
+                <i class="fa-solid fa-person-walking"></i>
+            </a>
+            <a href="#tagCollapse" data-bs-toggle="collapse" class="tp-search-icon-btn" title="Filters" role="button" aria-expanded="false" aria-controls="tagCollapse">
+                <i class="fa-solid fa-sliders"></i>
+            </a>
+            <a href="{% if user.is_authenticated %}{% url 'dashboard:home' %}{% else %}#{% endif %}" class="tp-search-icon-btn" title="Favourites" {% if not user.is_authenticated %}data-bs-toggle="modal" data-bs-target="#loginModal"{% endif %}>
+                <i class="fa-solid fa-heart"></i>
+            </a>
+
+            <button type="button" class="btn tp-clear-all-btn" onclick="document.getElementById('homeSearchInput').value=''; document.getElementById('homeSearchInput').focus();">Clear All</button>
+            <button type="submit" class="btn btn-tp-dark tp-search-submit-btn">
+                <i class="fa-solid fa-magnifying-glass me-1"></i>Search
+            </button>
+        </form>
+
+        <div class="collapse tp-filter-collapse" id="categoryCollapse">
+            <p class="tp-subhead-sm mb-3">Browse by Trip Type</p>
+            <div class="tp-category-grid">
+                {% for pill in category_pills %}
+                <a href="{% url 'destinations:explore' %}?category={{ pill.value }}" class="tp-category-pill">
+                    <i class="fa-solid {{ pill.icon }}"></i>
+                    <span>{{ pill.label }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if trending_tags %}
+        <div class="collapse tp-filter-collapse" id="tagCollapse">
+            <p class="tp-subhead-sm mb-3">Trending Searches</p>
+            <div class="tp-tag-row justify-content-center">
+                {% for tag in trending_tags %}
+                <a href="{% url 'destinations:explore' %}?tag={{ tag }}" class="tp-tag-pill">#{{ tag }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="mt-4">
+            <a href="{% url 'planner:ai_trip_planner' %}" class="btn btn-tp-primary px-4 tp-build-plan-btn">Build Custom Travel Plan</a>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <p class="tp-kicker mb-0">Fresh &amp; Fabulous Getaways</p>
+    <h2 class="section-title mb-4">Hot Picks</h2>
+
+    {% if featured %}
+    <div class="tp-hotpicks-wrap position-relative mb-3">
+        <button type="button" class="tp-slider-arrow tp-slider-arrow-prev" aria-label="Previous" onclick="document.getElementById('hotPicksTrack').scrollBy({left: -420, behavior: 'smooth'})">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <div class="tp-hotpicks-track" id="hotPicksTrack">
+            {% for destination in featured %}
+            <div class="tp-hotpick-card">
+                <div class="tp-hotpick-media">
+                    <img src="{{ destination.image_url|default:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=60' }}" alt="{{ destination.name }}">
+                    <div class="tp-hotpick-overlay"></div>
+                    <span class="tp-hotpick-country">{{ destination.country }}</span>
+                    <span class="tp-hotpick-city">{{ destination.city|default:destination.name }}</span>
+                    <h4 class="tp-hotpick-title">{{ destination.description|truncatewords:8 }}</h4>
+                    <div class="tp-hotpick-tags">
+                        <span class="tp-hotpick-badge">
+                            Hot &amp; New{% with tags=destination.tag_list %}{% if tags %}&nbsp;|&nbsp;{{ tags.0|title }}{% endif %}{% endwith %}
+                        </span>
+                    </div>
+                    <a href="{% url 'planner:ai_trip_planner' %}?destination={{ destination.id }}" class="btn tp-hotpick-explore">Explore</a>
+                </div>
+                {% if destination.related_picks %}
+                <p class="tp-hotpick-related-label">You might also like</p>
+                <div class="tp-hotpick-bubbles">
+                    {% for pick in destination.related_picks %}
+                    <a href="{% url 'destinations:detail' pick.slug %}" class="tp-hotpick-bubble">
+                        <span class="tp-hotpick-bubble-photo">
+                            <img src="{{ pick.image_url|default:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=200&q=60' }}" alt="{{ pick.name }}">
+                        </span>
+                        <span class="tp-hotpick-bubble-name">{{ pick.name }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" class="tp-slider-arrow tp-slider-arrow-next" aria-label="Next" onclick="document.getElementById('hotPicksTrack').scrollBy({left: 420, behavior: 'smooth'})">
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
+    <div class="text-center mb-5">
+        <a href="{% url 'destinations:explore' %}" class="btn btn-tp-primary px-4">Explore More Locations</a>
+    </div>
+    {% else %}
+    <div class="alert alert-warning mb-5">
+        No featured destinations yet. Load sample data with:
+        <code>python manage.py loaddata destinations/fixtures/sample_destinations.json</code>
+    </div>
+    {% endif %}
+</div>
+
+{% if footer_top_destinations %}
+<section class="tp-topdest-section py-5 overflow-hidden">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <p class="tp-kicker mb-2">Top destinations</p>
+                <h2 class="section-title tp-topdest-heading mb-3">Discover The World with Us</h2>
+                <p class="text-muted tp-topdest-desc mb-4">
+                    Every unforgettable trip starts with the right destination. Browse a curated shortlist of
+                    beaches, mountains, cities and cultural landmarks, then let TripPilot turn your pick into a
+                    full day-by-day itinerary.
+                </p>
+
+                <div class="tp-topdest-slider-wrap position-relative mb-4">
+                    <button type="button" class="tp-slider-arrow tp-slider-arrow-prev" aria-label="Previous" onclick="document.getElementById('topDestTrack').scrollBy({left: -190, behavior: 'smooth'})">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+
+                    <div class="tp-topdest-track" id="topDestTrack">
+                        {% for d in footer_top_destinations %}
+                        <div class="tp-topdest-card">
+                            <img src="{{ d.image_url|default:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=400&q=60' }}" alt="{{ d.name }}">
+                            <h6 class="tp-topdest-name">{{ d.country }}</h6>
+                            <a href="{% url 'planner:ai_trip_planner' %}?destination={{ d.id }}" class="btn tp-hotpick-explore">Explore</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="button" class="tp-slider-arrow tp-slider-arrow-next" aria-label="Next" onclick="document.getElementById('topDestTrack').scrollBy({left: 190, behavior: 'smooth'})">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <a href="{% url 'destinations:explore' %}" class="btn btn-tp-primary px-4">Explore More</a>
+            </div>
+            <div class="col-lg-6 tp-topdest-visual d-none d-lg-block">
+                <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=70" alt="Travel the world">
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const heroCarouselEl = document.getElementById('heroCarousel');
+    if (heroCarouselEl) {
+        const counterEl = document.getElementById('heroSlideCurrent');
+        heroCarouselEl.addEventListener('slide.bs.carousel', function (e) {
+            counterEl.textContent = String(e.to + 1).padStart(2, '0');
+        });
+    }
+</script>
+{% endblock %}

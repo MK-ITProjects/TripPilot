@@ -1,0 +1,158 @@
+[
+  {
+    "model": "destinations.destination",
+    "pk": 1,
+    "fields": {
+      "name": "Goa", "slug": "goa", "country": "India", "city": "Goa",
+      "category": "beach",
+      "description": "Goa is famous for its palm-lined beaches, vibrant nightlife, Portuguese-era churches and relaxed beach shacks along the Arabian Sea coast.",
+      "tags": "beach,nightlife,budget,honeymoon", "image_url": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 3500, "best_time_to_visit": "November to February",
+      "previous_visitor_count": 18500, "latitude": 15.2993, "longitude": 74.1240,
+      "is_featured": true, "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 2,
+    "fields": {
+      "name": "Manali", "slug": "manali", "country": "India", "city": "Manali",
+      "category": "hill",
+      "description": "Manali is a popular hill station in Himachal Pradesh, known for snow-capped mountains, adventure sports and the scenic Solang Valley.",
+      "tags": "hill station,adventure,honeymoon,snow", "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 2800, "best_time_to_visit": "October to June",
+      "previous_visitor_count": 15200, "latitude": 32.2432, "longitude": 77.1892,
+      "is_featured": true, "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 3,
+    "fields": {
+      "name": "Jaipur", "slug": "jaipur", "country": "India", "city": "Jaipur",
+      "category": "cultural",
+      "description": "The Pink City of Jaipur is famed for its majestic forts, palaces, vibrant bazaars and rich Rajputana heritage.",
+      "tags": "heritage,culture,forts,shopping", "image_url": "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 3000, "best_time_to_visit": "October to March",
+      "previous_visitor_count": 21000, "latitude": 26.9124, "longitude": 75.7873,
+      "is_featured": true, "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 4,
+    "fields": {
+      "name": "Rishikesh", "slug": "rishikesh", "country": "India", "city": "Rishikesh",
+      "category": "adventure",
+      "description": "Rishikesh, on the banks of the Ganges, is the world capital of yoga and a hub for white-water rafting and bungee jumping.",
+      "tags": "adventure,yoga,rafting,budget", "image_url": "https://images.unsplash.com/photo-1718431108073-7f61fb5dfefb?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 2200, "best_time_to_visit": "September to November",
+      "previous_visitor_count": 9800, "latitude": 30.0869, "longitude": 78.2676,
+      "is_featured": false, "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 5,
+    "fields": {
+      "name": "Ranthambore", "slug": "ranthambore", "country": "India", "city": "Sawai Madhopur",
+      "category": "wildlife",
+      "description": "Ranthambore National Park is one of India's best places to spot the majestic Bengal tiger in its natural habitat.",
+      "tags": "wildlife,safari,nature", "image_url": "https://images.unsplash.com/photo-1591824438708-ce405f36ba3d?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 4500, "best_time_to_visit": "November to April",
+      "previous_visitor_count": 7200, "latitude": 26.0173, "longitude": 76.5026,
+      "is_featured": false, "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 6,
+    "fields": {
+      "name": "Varanasi", "slug": "varanasi", "country": "India", "city": "Varanasi",
+      "category": "pilgrimage",
+      "description": "One of the world's oldest living cities, Varanasi is famed for its sacred ghats along the Ganges and the mesmerizing Ganga Aarti ceremony.",
+      "tags": "spiritual,heritage,ganges", "image_url": "https://images.unsplash.com/photo-1561361058-c24cecae35ca?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 2000, "best_time_to_visit": "October to March",
+      "previous_visitor_count": 25000, "latitude": 25.3176, "longitude": 82.9739,
+      "is_featured": false, "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 7,
+    "fields": {
+      "name": "Munnar", "slug": "munnar", "country": "India", "city": "Munnar",
+      "category": "hill",
+      "description": "Munnar's rolling tea plantations, misty hills and cool climate make it one of Kerala's most romantic hill retreats.",
+      "tags": "tea gardens,honeymoon,nature", "image_url": "https://images.unsplash.com/photo-1742106856193-5cc3424ac450?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 3200, "best_time_to_visit": "September to May",
+      "previous_visitor_count": 11400, "latitude": 10.0889, "longitude": 77.0595,
+      "is_featured": true, "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 8,
+    "fields": {
+      "name": "Andaman Islands", "slug": "andaman-islands", "country": "India", "city": "Port Blair",
+      "category": "beach",
+      "description": "The Andaman Islands offer pristine white-sand beaches, coral reefs and some of the best scuba diving spots in Asia.",
+      "tags": "beach,scuba,islands,luxury", "image_url": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 6000, "best_time_to_visit": "November to April",
+      "previous_visitor_count": 8600, "latitude": 11.7401, "longitude": 92.6586,
+      "is_featured": false, "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 9,
+    "fields": {
+      "name": "Hampi", "slug": "hampi", "country": "India", "city": "Hampi",
+      "category": "cultural",
+      "description": "A UNESCO World Heritage Site, Hampi's boulder-strewn landscape is dotted with the ruins of the mighty Vijayanagara Empire.",
+      "tags": "heritage,ruins,unesco,budget", "image_url": "https://images.unsplash.com/photo-1651569213711-b29d1fc3f995?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 1800, "best_time_to_visit": "October to February",
+      "previous_visitor_count": 6300, "latitude": 15.3350, "longitude": 76.4600,
+      "is_featured": false, "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 10,
+    "fields": {
+      "name": "Leh Ladakh", "slug": "leh-ladakh", "country": "India", "city": "Leh",
+      "category": "adventure",
+      "description": "Ladakh's high-altitude desert landscape, Buddhist monasteries and pristine lakes make it a bucket-list biking and trekking destination.",
+      "tags": "adventure,biking,mountains,offbeat", "image_url": "https://images.unsplash.com/photo-1760835251791-1fda687de791?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 4200, "best_time_to_visit": "June to September",
+      "previous_visitor_count": 9100, "latitude": 34.1526, "longitude": 77.5771,
+      "is_featured": true, "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 11,
+    "fields": {
+      "name": "Mumbai", "slug": "mumbai", "country": "India", "city": "Mumbai",
+      "category": "city",
+      "description": "India's financial capital blends colonial architecture, Bollywood glamour, buzzing street food markets and the iconic Marine Drive.",
+      "tags": "city,nightlife,shopping,food", "image_url": "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 4800, "best_time_to_visit": "October to February",
+      "previous_visitor_count": 30500, "latitude": 19.0760, "longitude": 72.8777,
+      "is_featured": false, "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 12,
+    "fields": {
+      "name": "Alleppey", "slug": "alleppey", "country": "India", "city": "Alappuzha",
+      "category": "beach",
+      "description": "Known as the Venice of the East, Alleppey's tranquil backwaters and houseboat cruises are the heart of Kerala tourism.",
+      "tags": "backwaters,houseboat,honeymoon,relax", "image_url": "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=800&q=60",
+      "average_cost_per_day": 3800, "best_time_to_visit": "November to February",
+      "previous_visitor_count": 10200, "latitude": 9.4981, "longitude": 76.3388,
+      "is_featured": false, "created_at": "2026-01-01T00:00:00Z"
+    }
+  }
+]

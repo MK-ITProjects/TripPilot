@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+<div class="tp-hero py-5">
+    <div class="container">
+        <h1>Contact Us</h1>
+        <p class="lead">Questions about this project? Send a message below.</p>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            {% if submitted %}
+                <div class="alert alert-success">Thanks for reaching out! This is a demo form for the college project (no email backend is wired up).</div>
+            {% endif %}
+            <form method="post" class="card tp-card p-4">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Message</label>
+                    <textarea class="form-control" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-tp-primary w-100">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

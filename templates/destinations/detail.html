@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block title %}{{ destination.name }}{% endblock %}
+{% block content %}
+<div class="tp-hero py-5" style="padding:60px 0;">
+    <div class="container">
+        <h1>{{ destination.name }}</h1>
+        <p class="lead mb-0">{{ destination.city }}{% if destination.city %}, {% endif %}{{ destination.country }} &middot; {{ destination.get_category_display }}</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-8">
+            {% if travel_alerts %}
+            <div class="mb-4">
+                {% for a in travel_alerts %}
+                <div class="tp-alert-row tp-alert-{{ a.severity }}">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                    <span>{{ a.message }}</span>
+                    <span class="small text-muted ms-auto">{{ a.source }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <img src="{{ destination.image_url|default:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1000&q=60' }}" class="img-fluid rounded-4 mb-4" alt="{{ destination.name }}">
+            <h4 class="fw-bold">About this destination</h4>
+            <p>{{ destination.description }}</p>
+
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                {% for tag in destination.tag_list %}
+                    <span class="badge bg-secondary">#{{ tag }}</span>
+                {% endfor %}
+            </div>
+
+            {% if destination.latitude and destination.longitude %}
+            <h4 class="fw-bold mt-4">Location</h4>
+            <div id="destination-map" style="height:320px;border-radius:14px;" class="mb-4"></div>
+            {% endif %}
+
+            {% if nearby_attractions %}
+            <h4 class="fw-bold mt-4 mb-3">Nearby Places to Visit</h4>
+            <div class="row g-3 mb-4">
+                {% for attraction in nearby_attractions %}
+                <div class="col-md-6">
+                    <div class="tp-stat-box h-100 text-start">
+                        <p class="fw-bold mb-1"><i class="fa-solid fa-map-pin me-2 text-tp"></i>{{ attraction.name }}</p>
+                        <p class="small text-muted mb-0">{{ attraction.description|truncatewords:20 }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if nearby_destinations %}
+            <h4 class="fw-bold mt-4 mb-3">People Also Visit</h4>
+            <div class="row g-3 mb-4">
+                {% for item in nearby_destinations %}
+                <div class="col-md-6 col-lg-3">
+                    <a href="{{ item.destination.get_absolute_url }}" class="text-decoration-none">
+                        <div class="card tp-card h-100">
+                            <img src="{{ item.destination.image_url|default:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=400&q=60' }}" alt="{{ item.destination.name }}">
+                            <div class="card-body p-2">
+                                <p class="fw-bold small mb-0 text-dark">{{ item.destination.name }}</p>
+                                <p class="text-muted small mb-0">
+                                    {% if item.distance_km %}{{ item.distance_km }} km away{% else %}{{ item.destination.get_category_display }}{% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <h4 class="fw-bold mt-5">Traveler Reviews {% if destination.average_rating %}&middot; {{ destination.average_rating }}/5{% endif %}</h4>
+            {% if sentiment_summary %}
+            <p class="text-muted small mb-3">
+                <i class="fa-solid fa-face-smile text-tp me-1"></i>
+                {{ sentiment_summary.positive_percent }}% positive sentiment across {{ sentiment_summary.total }} analyzed review{{ sentiment_summary.total|pluralize }}
+                ({{ sentiment_summary.positive }} positive &middot; {{ sentiment_summary.neutral }} neutral &middot; {{ sentiment_summary.negative }} negative)
+            </p>
+            {% endif %}
+            {% for review in reviews %}
+                <div class="border-bottom py-3">
+                    <strong>{{ review.user.username }}</strong>
+                    <span class="text-warning">
+                        {% for i in "12345" %}<i class="fa-solid fa-star{% if forloop.counter > review.rating %}-o{% endif %}"></i>{% endfor %}
+                    </span>
+                    {% if review.sentiment %}
+                    <span class="badge tp-sentiment-{{ review.sentiment }}">{{ review.get_sentiment_display }}</span>
+                    {% endif %}
+                    <p class="mb-0 text-muted small">{{ review.created_at|date:"M d, Y" }}</p>
+                    <p>{{ review.comment }}</p>
+                </div>
+            {% empty %}
+                <p class="text-muted">No reviews yet. Be the first to share your experience!</p>
+            {% endfor %}
+
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <h6 class="fw-bold">Leave a review</h6>
+                <div class="mb-2">
+                    <select name="rating" class="form-select" style="max-width:150px;">
+                        {% for i in "54321" %}<option value="{{ i }}">{{ i }} Star{{ i|pluralize }}</option>{% endfor %}
+                    </select>
+                </div>
+                <textarea name="comment" class="form-control mb-2" rows="3" placeholder="Share your experience" required></textarea>
+                <button type="submit" class="btn btn-tp-primary">Submit Review</button>
+            </form>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card tp-card p-4 mb-4">
+                <h5 class="fw-bold mb-3">Trip Facts</h5>
+                <p><i class="fa-solid fa-indian-rupee-sign me-2 text-tp"></i>&#8377;{{ destination.average_cost_per_day }} / day (avg)</p>
+                <p><i class="fa-solid fa-calendar-days me-2"></i>Best time: {{ destination.best_time_to_visit|default:"Year-round" }}</p>
+                <p><i class="fa-solid fa-users me-2"></i>{{ destination.previous_visitor_count }} visitors last season</p>
+                {% if user.is_authenticated %}
+                <form method="post" action="{% url 'destinations:toggle_favorite' destination.slug %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-dark w-100 mt-2"><i class="fa-solid fa-heart me-1"></i>Save to Favorites</button>
+                </form>
+                {% endif %}
+            </div>
+            <a href="{% url 'ml_model:crowd_prediction' %}?destination={{ destination.id }}" class="btn btn-tp-primary w-100 mb-2">Check Crowd Prediction</a>
+            <a href="{% url 'planner:ai_trip_planner' %}?destination={{ destination.id }}" class="btn btn-outline-dark w-100 mb-2">Build Itinerary for {{ destination.name }}</a>
+            <a href="{% url 'scraper:weather_alerts' %}?city={{ destination.city|default:destination.country }}" class="btn btn-outline-dark w-100">View Weather</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% if destination.latitude and destination.longitude %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+{% endblock %}
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const map = L.map('destination-map').setView([{{ destination.latitude }}, {{ destination.longitude }}], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(map);
+    L.marker([{{ destination.latitude }}, {{ destination.longitude }}]).addTo(map)
+        .bindPopup('{{ destination.name|escapejs }}').openPopup();
+</script>
+{% endblock %}
+{% endif %}

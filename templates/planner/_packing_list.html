@@ -1,0 +1,13 @@
+<div class="tp-packing-list d-print-none">
+    {% for group in packing_list %}
+    <div class="tp-packing-group">
+        <h6 class="fw-bold text-tp mb-2">{{ group.category }}</h6>
+        {% for item in group.items %}
+        <label class="tp-packing-item">
+            <input type="checkbox">
+            <span>{{ item }}</span>
+        </label>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>

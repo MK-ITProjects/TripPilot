@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Budget Calculator{% endblock %}
+{% block content %}
+<div class="tp-hero py-5">
+    <div class="container">
+        <h1>Budget Calculator</h1>
+        <p class="lead">Estimate your total trip cost using our Linear Regression cost-prediction model.</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-5">
+            <div class="card tp-card p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.destination.label }}</label>
+                        {{ form.destination }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Number of Days</label>
+                        {{ form.days }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Travelers</label>
+                        {{ form.travelers }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trip Style</label>
+                        {{ form.trip_style }}
+                    </div>
+                    <button type="submit" class="btn btn-tp-primary w-100">Calculate Budget</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            {% if breakdown %}
+            <div class="card tp-card p-4">
+                <h5 class="fw-bold">Estimated Budget for {{ breakdown.destination.name }}</h5>
+                <p class="display-5 fw-bold text-tp">&#8377;{{ breakdown.total_cost }}</p>
+                <div class="row text-center g-3">
+                    <div class="col-6">
+                        <div class="tp-stat-box"><p class="fw-bold mb-0">&#8377;{{ breakdown.per_day }}</p><small class="text-muted">Per Day</small></div>
+                    </div>
+                    <div class="col-6">
+                        <div class="tp-stat-box"><p class="fw-bold mb-0">&#8377;{{ breakdown.per_person }}</p><small class="text-muted">Per Traveler</small></div>
+                    </div>
+                </div>
+                <p class="text-muted small mt-3 mb-0">{{ breakdown.days }} days &middot; {{ breakdown.travelers }} traveler(s) &middot; {{ breakdown.trip_style|title }} style</p>
+            </div>
+
+            <div class="card tp-card p-4 mt-4">
+                <h6 class="fw-bold mb-3">Where It Goes</h6>
+                {% include 'planner/_budget_breakdown.html' with breakdown=breakdown.categories %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">Fill in the form to get an ML-estimated budget breakdown.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

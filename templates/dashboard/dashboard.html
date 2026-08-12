@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}My Dashboard{% endblock %}
+{% block content %}
+<div class="tp-hero py-5" style="padding: 60px 0;">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h1>Welcome back, {{ user.first_name|default:user.username }}!</h1>
+            <p class="lead mb-0">Manage your saved trips and favorite destinations.</p>
+        </div>
+        {% if user.is_staff %}
+        <a href="{% url 'dashboard:admin_analytics' %}" class="btn btn-tp-primary"><i class="fa-solid fa-chart-line me-1"></i>Admin Analytics</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container py-5">
+    <h4 class="fw-bold mb-3">My Trip Plans</h4>
+    <div class="row g-4 mb-5">
+        {% for trip in trip_plans %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card tp-card p-3">
+                <h5 class="fw-bold">{{ trip.title }}</h5>
+                <p class="text-muted small mb-1">{{ trip.start_date }} &rarr; {{ trip.end_date }} ({{ trip.duration_days }} days)</p>
+                <p class="mb-1">{{ trip.travelers }} traveler(s) &middot; {{ trip.get_trip_style_display }}</p>
+                <p class="fw-bold">Est. cost: &#8377;{{ trip.estimated_cost }}</p>
+                <a href="{% url 'planner:trip_detail' trip.id %}" class="btn btn-sm btn-tp-primary">Open Trip Builder</a>
+                <a href="{% url 'destinations:detail' trip.destination.slug %}" class="btn btn-sm btn-outline-dark">View Destination</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12"><div class="alert alert-info">No saved trips yet. Try the <a href="{% url 'planner:ai_trip_planner' %}">AI Trip Planner</a>.</div></div>
+        {% endfor %}
+    </div>
+
+    <h4 class="fw-bold mb-3">Favorite Destinations</h4>
+    <div class="row g-4">
+        {% for destination in favorites %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card tp-card">
+                <img src="{{ destination.image_url|default:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=60' }}" alt="{{ destination.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ destination.name }}</h5>
+                    <a href="{% url 'destinations:detail' destination.slug %}" class="btn btn-sm btn-outline-dark">View</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12"><div class="alert alert-info">No favorites yet. Browse <a href="{% url 'destinations:explore' %}">destinations</a> and save some!</div></div>
+        {% endfor %}
+    </div>
+
+    {% if recommended %}
+    <h4 class="fw-bold mb-3 mt-5">Recommended For You</h4>
+    <div class="row g-4">
+        {% for destination in recommended %}
+        <div class="col-md-6 col-lg-3">
+            <div class="card tp-card">
+                <img src="{{ destination.image_url|default:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=60' }}" alt="{{ destination.name }}">
+                <div class="card-body">
+                    <span class="badge badge-tag mb-2">{{ destination.get_category_display }}</span>
+                    <h6 class="card-title">{{ destination.name }}</h6>
+                    <a href="{% url 'destinations:detail' destination.slug %}" class="btn btn-sm btn-outline-dark">View</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

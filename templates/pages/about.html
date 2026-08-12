@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}About{% endblock %}
+{% block content %}
+<div class="tp-hero py-5">
+    <div class="container">
+        <h1>About This Project</h1>
+        <p class="lead">A college project recreating TripPilot's travel-planning experience with Python.</p>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <h4 class="fw-bold">Project Overview</h4>
+            <p>This is a full-stack travel planning platform built with <strong>Python + Django</strong>, demonstrating
+            two core data-science skills: <strong>web scraping</strong> and <strong>machine learning</strong>. It lets
+            users explore destinations, generate AI-assisted itineraries, predict tourist crowd levels, calculate trip
+            budgets and chat with a travel assistant &mdash; all backed by real and simulated scraped data.</p>
+
+            <h5 class="fw-bold mt-4">Web Scraping</h5>
+            <ul>
+                <li>Travel news &mdash; scraped from Wikipedia's "In the news" (BeautifulSoup + Requests)</li>
+                <li>Attraction descriptions &mdash; scraped from destination Wikipedia pages</li>
+                <li>Weather updates &mdash; fetched from the free Open-Meteo API</li>
+                <li>Hotel prices &amp; local events &mdash; simulated sample data generators</li>
+            </ul>
+
+            <h5 class="fw-bold mt-4">Machine Learning</h5>
+            <ul>
+                <li>Crowd-level classification &mdash; Decision Tree &amp; Random Forest</li>
+                <li>Trip cost estimation &mdash; Linear Regression</li>
+                <li>Destination segmentation &mdash; K-Means clustering</li>
+            </ul>
+
+            <h5 class="fw-bold mt-4">Tech Stack</h5>
+            <p>Python, Django, HTML/CSS/JavaScript, Bootstrap, SQLite, BeautifulSoup, Requests, Pandas, NumPy, Scikit-learn.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

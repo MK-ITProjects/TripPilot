@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Weather & Travel Alerts{% endblock %}
+{% block content %}
+<div class="tp-hero py-5">
+    <div class="container">
+        <h1>Weather &amp; Travel Alerts</h1>
+        <p class="lead">Live weather via Open-Meteo, plus local events and hotel price snapshots per city.</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-md-8">
+            <input type="text" name="city" value="{{ city }}" class="form-control" placeholder="Enter a city, e.g. Jaipur">
+        </div>
+        <div class="col-md-4 d-grid">
+            <button type="submit" class="btn btn-tp-primary">Check Weather</button>
+        </div>
+    </form>
+
+    {% if quick_cities %}
+    <div class="mb-4">
+        {% for c in quick_cities %}
+            <a href="?city={{ c }}" class="btn btn-sm btn-outline-secondary me-2 mb-2">{{ c }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if error %}<div class="alert alert-warning">{{ error }}</div>{% endif %}
+
+    {% if city and not error %}
+    <div class="mb-4">
+        <h6 class="fw-bold"><i class="fa-solid fa-triangle-exclamation text-tp me-1"></i>Live Travel Alerts for {{ city }}</h6>
+        {% for a in alerts %}
+        <div class="tp-alert-row tp-alert-{{ a.severity }}">
+            <i class="fa-solid fa-circle-exclamation me-2"></i>
+            <span>{{ a.message }}</span>
+            <span class="small text-muted ms-auto">{{ a.source }}</span>
+        </div>
+        {% empty %}
+        <div class="tp-alert-row tp-alert-none">
+            <i class="fa-solid fa-circle-check me-2"></i>No active weather or news alerts for {{ city }} right now.
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if weather %}
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="tp-stat-box h-100">
+                <i class="fa-solid fa-cloud-sun"></i>
+                <h4 class="fw-bold mt-2">{{ weather.city }}</h4>
+                <p class="display-6 fw-bold mb-0">{{ weather.temperature_c }}&deg;C</p>
+                <p class="text-muted">{{ weather.condition }}</p>
+                <p class="small text-muted">Humidity: {{ weather.humidity|default:"N/A" }}% &middot; Wind: {{ weather.wind_speed_kmh|default:"N/A" }} km/h</p>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <h6 class="fw-bold">Upcoming Events</h6>
+            {% for event in events %}
+                <div class="border-bottom py-2">
+                    <strong>{{ event.name }}</strong>
+                    <p class="small text-muted mb-0">{{ event.event_date }}</p>
+                </div>
+            {% empty %}
+                <p class="text-muted small">No events found for this city yet. Run <code>python manage.py scrape_hotels_events</code>.</p>
+            {% endfor %}
+        </div>
+        <div class="col-lg-4">
+            <h6 class="fw-bold">Hotel Price Snapshot</h6>
+            {% for hotel in hotels %}
+                <div class="border-bottom py-2 d-flex justify-content-between">
+                    <span>{{ hotel.hotel_name }}</span>
+                    <strong>&#8377;{{ hotel.price_per_night }}</strong>
+                </div>
+            {% empty %}
+                <p class="text-muted small">No hotel data found for this city yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

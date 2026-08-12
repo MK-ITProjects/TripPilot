@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}Crowd Prediction{% endblock %}
+{% block content %}
+<div class="tp-hero py-5">
+    <div class="container">
+        <h1>Crowd Prediction Engine</h1>
+        <p class="lead">Machine learning (Random Forest / Decision Tree) predicts how busy a destination will be for a given month.</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-5">
+            <div class="card tp-card p-4">
+                <h5 class="fw-bold mb-3">Get a Prediction</h5>
+                {% if error %}<div class="alert alert-warning">{{ error }}</div>{% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.destination.label }}</label>
+                        {{ form.destination }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.month.label }}</label>
+                        {{ form.month }}
+                    </div>
+                    <button type="submit" class="btn btn-tp-primary w-100">Predict Crowd Level</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            {% if result %}
+            <div class="card tp-card p-4">
+                <h5 class="fw-bold">{{ result.destination.name }} &mdash; {{ result.month_display }}</h5>
+                <span class="badge crowd-badge-{{ result.crowd.level }} mb-3 fs-6">
+                    {{ result.crowd.level_display }} Crowd
+                </span>
+                <div class="row text-center g-3 mb-3">
+                    <div class="col-4">
+                        <div class="tp-stat-box">
+                            <i class="fa-solid fa-users"></i>
+                            <p class="fw-bold mb-0">{{ result.crowd.score }}</p>
+                            <small class="text-muted">Popularity Score</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="tp-stat-box">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                            <p class="fw-bold mb-0">&#8377;{{ result.estimated_cost }}</p>
+                            <small class="text-muted">Est. cost (5 days, 2 travelers)</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="tp-stat-box">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <p class="fw-bold mb-0">{{ result.segment }}</p>
+                            <small class="text-muted">Trip Segment (K-Means)</small>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="fw-bold">Best months to visit (lowest predicted crowd)</h6>
+                <div class="d-flex gap-2 flex-wrap mb-4">
+                    {% for m in result.best_months %}<span class="badge bg-secondary">{{ m }}</span>{% endfor %}
+                </div>
+
+                <h6 class="fw-bold">Smart Crowd Calendar &mdash; all 12 months</h6>
+                <div class="tp-crowd-calendar">
+                    {% for m in result.crowd_calendar %}
+                    <div class="tp-crowd-month">
+                        <div class="tp-crowd-bar-track">
+                            <div class="tp-crowd-bar-fill crowd-badge-{{ m.level }}" style="height: {{ m.score }}%"></div>
+                        </div>
+                        <span class="tp-crowd-month-label">{{ m.month_short }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="d-flex gap-3 small text-muted mt-2 mb-4">
+                    <span><span class="tp-legend-dot crowd-badge-low"></span>Low</span>
+                    <span><span class="tp-legend-dot crowd-badge-medium"></span>Medium</span>
+                    <span><span class="tp-legend-dot crowd-badge-high"></span>High</span>
+                </div>
+
+                <a href="{% url 'planner:ai_trip_planner' %}?destination={{ result.destination.id }}" class="btn btn-outline-dark mt-2">Build a Trip Plan for This Destination</a>
+            </div>
+            {% else %}
+            <div class="alert alert-info">Choose a destination and month to see the predicted crowd level, best time to visit, estimated cost and trip segment.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

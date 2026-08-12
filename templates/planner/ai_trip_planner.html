@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% block title %}AI Trip Planner{% endblock %}
+{% block content %}
+<div class="tp-hero py-5">
+    <div class="container">
+        <h1>AI Trip Planner</h1>
+        <p class="lead">Build a custom-fit, day-by-day itinerary in seconds.</p>
+    </div>
+</div>
+
+{% if itinerary %}
+<div class="tp-trip-header d-print-none">
+    <div class="container">
+        <div class="tp-trip-prefs-bar">
+            <div class="tp-prefs-stat"><strong>{{ destination.name }}</strong></div>
+            <div class="tp-prefs-datebox"><i class="fa-solid fa-calendar"></i>{{ start_date|date:"d M Y" }}</div>
+            <div class="tp-prefs-datebox"><i class="fa-solid fa-calendar"></i>{{ end_date|date:"d M Y" }}</div>
+            <div class="tp-prefs-stat"><i class="fa-solid fa-sun"></i>{{ itinerary|length }} Days</div>
+            <div class="tp-prefs-stat"><i class="fa-solid fa-user"></i>{{ travelers }}</div>
+            <div class="tp-prefs-budget ms-auto">
+                <i class="fa-solid fa-indian-rupee-sign"></i>{{ estimated_cost }}
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tp-tab-nav">
+            {% for tab_key, tab_label, tab_icon in tabs %}
+            <a href="?destination={{ destination.id }}&tab={{ tab_key }}" class="tp-tab-pill {% if active_tab == tab_key %}active{% endif %}">
+                <i class="fa-solid {{ tab_icon }}"></i>{{ tab_label }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="container py-5">
+    <div class="row g-5 align-items-start">
+        <div class="col-lg-4 d-print-none">
+            <div class="card tp-card p-4">
+                <h5 class="fw-bold mb-3">Plan Your Trip</h5>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.origin_city.label }}</label>
+                        {{ form.origin_city }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.destination.label }}</label>
+                        {{ form.destination }}
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Start Date</label>
+                            {{ form.start_date }}
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">End Date</label>
+                            {{ form.end_date }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Travelers</label>
+                        {{ form.travelers }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trip Style</label>
+                        {{ form.trip_style }}
+                    </div>
+                    {% if form.errors %}<div class="alert alert-danger">Please check the dates and try again.</div>{% endif %}
+                    <button type="submit" name="save" value="0" class="btn btn-outline-dark w-100 mb-2">Generate Itinerary</button>
+                    {% if itinerary %}
+                    <button type="submit" name="save" value="1" class="btn btn-tp-primary w-100">Save &amp; Build Full Trip</button>
+                    {% endif %}
+                </form>
+                {% if save_error %}<div class="alert alert-warning mt-3">{{ save_error }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            {% if itinerary %}
+                {% if active_tab == 'rentalcar' %}
+                <h5 class="fw-bold mb-3">Rental Cars in {{ destination.city|default:destination.name }}</h5>
+                <div class="row g-3">
+                    {% for car in cars %}
+                    <div class="col-md-4">
+                        <div class="tp-stat-box h-100">
+                            <i class="fa-solid fa-car"></i>
+                            <p class="fw-bold mb-0 mt-2">{{ car.model }}</p>
+                            <p class="small text-muted mb-1">{{ car.transmission }} &middot; {{ car.seats }} seats</p>
+                            <p class="fw-bold text-tp mb-0">&#8377;{{ car.price_per_day }}/day</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% elif active_tab == 'hotel' %}
+                <h5 class="fw-bold mb-3">Hotels in {{ destination.city|default:destination.name }}</h5>
+                <div class="card tp-card p-4">
+                    {% for hotel in hotels %}
+                    <div class="tp-location-row">
+                        <div><i class="fa-solid fa-building me-2 text-tp"></i>{{ hotel.hotel_name }}</div>
+                        <div class="small text-muted">{% if hotel.rating %}<i class="fa-solid fa-star text-warning"></i> {{ hotel.rating }}{% endif %}</div>
+                        <div class="fw-bold">&#8377;{{ hotel.price_per_night }}/night</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% elif active_tab == 'restaurant' %}
+                <h5 class="fw-bold mb-3">Restaurants in {{ destination.city|default:destination.name }}</h5>
+                <div class="card tp-card p-4">
+                    {% for restaurant in restaurants %}
+                    <div class="tp-location-row">
+                        <div><i class="fa-solid fa-utensils me-2 text-tp"></i>{{ restaurant.name }}</div>
+                        <div class="small text-muted">{{ restaurant.cuisine }} &middot; <i class="fa-solid fa-star text-warning"></i> {{ restaurant.rating }}</div>
+                        <div class="fw-bold">&#8377;{{ restaurant.avg_cost_for_two }} for two</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% elif active_tab == 'travel' %}
+                <h5 class="fw-bold mb-3">Travel to {{ destination.city|default:destination.name }}</h5>
+                <div class="tp-travel-timeline">
+                    <div class="tp-travel-node"><span class="tp-travel-dot"></span><span class="tp-travel-node-label">{{ preview_leg.origin_name }}</span></div>
+                    <div class="tp-travel-connector tp-travel-connector-flight"><i class="fa-solid fa-plane"></i></div>
+                    <div class="tp-travel-node"><span class="tp-travel-dot"></span><span class="tp-travel-node-label">{{ preview_leg.destination_name }}</span></div>
+                </div>
+                <div class="card tp-card p-4">
+                    <p class="text-muted small mb-0">Flight/train booking isn't implemented in this demo. Exact distance and duration will show up once you save this as a full trip, where each stop's coordinates are tracked.</p>
+                </div>
+
+                {% elif active_tab == 'activities' %}
+                <h5 class="fw-bold mb-3">Activities in {{ destination.name }}</h5>
+                {% for day in itinerary %}
+                <div class="card tp-card p-4 mb-3">
+                    <h6 class="fw-bold text-tp">Day {{ day.day }}</h6>
+                    <p class="mb-2">{{ day.title }}</p>
+                    <ul>
+                        {% for activity in day.activities %}<li>{{ activity }}</li>{% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+
+                {% elif active_tab == 'budget' %}
+                <h5 class="fw-bold mb-3">Budget for {{ destination.name }}</h5>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="tp-stat-box h-100"><p class="fw-bold mb-0">&#8377;{{ estimated_cost }}</p><small class="text-muted">Total Estimated</small></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="tp-stat-box h-100"><p class="fw-bold mb-0">&#8377;{{ budget_per_day }}</p><small class="text-muted">Per Day</small></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="tp-stat-box h-100"><p class="fw-bold mb-0">&#8377;{{ budget_per_person }}</p><small class="text-muted">Per Traveler</small></div>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold mt-4 mb-3">Where It Goes</h6>
+                <div class="card tp-card p-4">
+                    {% include 'planner/_budget_breakdown.html' with breakdown=budget_breakdown %}
+                </div>
+
+                {% elif active_tab == 'packing' %}
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                    <h5 class="fw-bold mb-0">Packing List for {{ destination.name }}</h5>
+                    <button type="button" onclick="window.print()" class="btn btn-sm btn-outline-dark d-print-none">
+                        <i class="fa-solid fa-file-pdf me-1"></i>Download as PDF
+                    </button>
+                </div>
+                <div class="card tp-card p-4">
+                    {% include 'planner/_packing_list.html' %}
+                </div>
+
+                {% else %}
+                <div class="row g-4 mb-3">
+                    <div class="col-lg-7">
+                        <div id="itinerary-print">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                                <h5 class="fw-bold mb-0">{{ destination.name }} Itinerary</h5>
+                                <button type="button" onclick="window.print()" class="btn btn-sm btn-outline-dark d-print-none">
+                                    <i class="fa-solid fa-file-pdf me-1"></i>Download as PDF
+                                </button>
+                            </div>
+                            {% for day in itinerary %}
+                            <div class="card tp-card p-4 mb-3">
+                                <h6 class="fw-bold text-tp">Day {{ day.day }}</h6>
+                                <p class="mb-2">{{ day.title }}</p>
+                                <ul>
+                                    {% for activity in day.activities %}<li>{{ activity }}</li>{% endfor %}
+                                </ul>
+                                <p class="small text-muted mb-0">Meals: {{ day.meals|join:", " }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-lg-5 d-print-none">
+                        <div id="plannerMap" class="tp-trip-map"></div>
+                    </div>
+                </div>
+                {% endif %}
+            {% else %}
+            <div class="alert alert-info">Fill in the form to generate a personalized day-by-day itinerary.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+    @media print {
+        .navbar, footer, .tp-trip-header { display: none !important; }
+        body { background: #fff; }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const plannerMapEl = document.getElementById('plannerMap');
+    if (plannerMapEl) {
+        {% if destination.latitude and destination.longitude %}
+        const map = L.map('plannerMap').setView([{{ destination.latitude }}, {{ destination.longitude }}], 11);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+        }).addTo(map);
+        L.marker([{{ destination.latitude }}, {{ destination.longitude }}]).addTo(map).bindPopup("{{ destination.name|escapejs }}").openPopup();
+        {% else %}
+        plannerMapEl.innerHTML =
+            '<div class="d-flex align-items-center justify-content-center h-100 text-muted">No coordinates saved for this destination yet</div>';
+        {% endif %}
+    }
+</script>
+{% endblock %}

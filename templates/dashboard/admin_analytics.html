@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Admin Analytics{% endblock %}
+{% block content %}
+<div class="tp-hero py-5">
+    <div class="container">
+        <h1>Admin Analytics Dashboard</h1>
+        <p class="lead">Staff-only overview of platform activity, beyond the standard Django admin.</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row text-center g-4 mb-5">
+        <div class="col-md-3 col-6">
+            <div class="tp-stat-box"><i class="fa-solid fa-users"></i><p class="fw-bold mb-0 mt-2">{{ total_users }}</p><small class="text-muted">Users</small></div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="tp-stat-box"><i class="fa-solid fa-map-location-dot"></i><p class="fw-bold mb-0 mt-2">{{ total_destinations }}</p><small class="text-muted">Destinations</small></div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="tp-stat-box"><i class="fa-solid fa-suitcase-rolling"></i><p class="fw-bold mb-0 mt-2">{{ total_trips }}</p><small class="text-muted">Trip Plans</small></div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="tp-stat-box"><i class="fa-solid fa-star"></i><p class="fw-bold mb-0 mt-2">{{ total_reviews }}</p><small class="text-muted">Reviews</small></div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="tp-stat-box"><i class="fa-solid fa-indian-rupee-sign"></i><p class="fw-bold mb-0 mt-2">&#8377;{{ total_estimated_spend }}</p><small class="text-muted">Est. Planned Spend</small></div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="tp-stat-box"><i class="fa-solid fa-wallet"></i><p class="fw-bold mb-0 mt-2">&#8377;{{ total_logged_expenses }}</p><small class="text-muted">Logged Expenses</small></div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="tp-stat-box"><i class="fa-solid fa-chart-line"></i><p class="fw-bold mb-0 mt-2">{{ total_crowd_predictions }}</p><small class="text-muted">Crowd Predictions Run</small></div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="tp-stat-box"><i class="fa-solid fa-face-smile"></i><p class="fw-bold mb-0 mt-2">{{ sentiment_total }}</p><small class="text-muted">Reviews Analyzed (NLP)</small></div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card tp-card p-4 h-100">
+                <h6 class="fw-bold mb-3">Review Sentiment</h6>
+                {% if sentiment_total %}
+                <div class="tp-location-row"><div><span class="badge tp-sentiment-positive">Positive</span></div><div class="fw-bold">{{ sentiment_positive }}</div></div>
+                <div class="tp-location-row"><div><span class="badge tp-sentiment-neutral">Neutral</span></div><div class="fw-bold">{{ sentiment_neutral }}</div></div>
+                <div class="tp-location-row"><div><span class="badge tp-sentiment-negative">Negative</span></div><div class="fw-bold">{{ sentiment_negative }}</div></div>
+                {% else %}
+                <p class="text-muted small mb-0">No reviews analyzed yet. Run <code>python manage.py analyze_reviews</code>.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card tp-card p-4 h-100">
+                <h6 class="fw-bold mb-3">Most Planned Destinations</h6>
+                {% for d in top_destinations %}
+                <div class="tp-location-row"><div>{{ d.name }}</div><div class="fw-bold">{{ d.trip_count }} trip{{ d.trip_count|pluralize }}</div></div>
+                {% empty %}
+                <p class="text-muted small mb-0">No trips planned yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card tp-card p-4 h-100">
+                <h6 class="fw-bold mb-3">Most Favorited</h6>
+                {% for d in most_favorited %}
+                <div class="tp-location-row"><div>{{ d.name }}</div><div class="fw-bold">{{ d.favorite_count }} save{{ d.favorite_count|pluralize }}</div></div>
+                {% empty %}
+                <p class="text-muted small mb-0">No favorites saved yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-lg-6">
+            <div class="card tp-card p-4 h-100">
+                <h6 class="fw-bold mb-3">Destinations by Category</h6>
+                {% for row in category_breakdown %}
+                <div class="tp-location-row"><div>{{ row.label }}</div><div class="fw-bold">{{ row.count }}</div></div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card tp-card p-4 h-100">
+                <h6 class="fw-bold mb-3">Recent Sign-ups</h6>
+                {% for u in recent_users %}
+                <div class="tp-location-row"><div>{{ u.username }}</div><div class="small text-muted">{{ u.date_joined|date:"d M, Y" }}</div></div>
+                {% empty %}
+                <p class="text-muted small mb-0">No users yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

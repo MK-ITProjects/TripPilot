@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Compare Destinations{% endblock %}
+{% block content %}
+<div class="tp-hero py-5">
+    <div class="container">
+        <h1>Compare Destinations</h1>
+        <p class="lead">Pick 2-4 destinations to compare cost, crowd, category and more side by side.</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <form method="get" class="card tp-card p-4 mb-5">
+        <h6 class="fw-bold mb-3">Choose destinations (2-4)</h6>
+        <div class="row g-2">
+            {% for d in all_destinations %}
+            <div class="col-md-4 col-lg-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="d" value="{{ d.slug }}" id="cmp-{{ d.slug }}"
+                           {% if d.slug in selected_slugs %}checked{% endif %}>
+                    <label class="form-check-label small" for="cmp-{{ d.slug }}">{{ d.name }}</label>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-tp-primary mt-3" style="max-width:220px;">Compare</button>
+    </form>
+
+    {% if destinations|length >= 2 %}
+    <div class="table-responsive">
+        <table class="table tp-compare-table align-middle">
+            <thead>
+                <tr>
+                    <th>Destination</th>
+                    {% for d in destinations %}
+                    <th class="text-center">
+                        <img src="{{ d.image_url|default:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=300&q=60' }}" class="tp-compare-thumb mb-2" alt="{{ d.name }}">
+                        <div>{{ d.name }}</div>
+                        <a href="{{ d.get_absolute_url }}" class="small">View details</a>
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="fw-bold">Country</td>
+                    {% for d in destinations %}<td class="text-center">{{ d.country }}</td>{% endfor %}
+                </tr>
+                <tr>
+                    <td class="fw-bold">Category</td>
+                    {% for d in destinations %}<td class="text-center">{{ d.get_category_display }}</td>{% endfor %}
+                </tr>
+                <tr>
+                    <td class="fw-bold">Avg. Cost / Day</td>
+                    {% for d in destinations %}<td class="text-center">&#8377;{{ d.average_cost_per_day }}</td>{% endfor %}
+                </tr>
+                <tr>
+                    <td class="fw-bold">Best Time to Visit</td>
+                    {% for d in destinations %}<td class="text-center">{{ d.best_time_to_visit|default:"Year-round" }}</td>{% endfor %}
+                </tr>
+                <tr>
+                    <td class="fw-bold">Average Rating</td>
+                    {% for d in destinations %}<td class="text-center">{% if d.average_rating %}{{ d.average_rating }}/5{% else %}No reviews yet{% endif %}</td>{% endfor %}
+                </tr>
+                <tr>
+                    <td class="fw-bold">Visitors Last Season</td>
+                    {% for d in destinations %}<td class="text-center">{{ d.previous_visitor_count }}</td>{% endfor %}
+                </tr>
+                <tr>
+                    <td class="fw-bold">Tags</td>
+                    {% for d in destinations %}
+                    <td class="text-center">
+                        {% for tag in d.tag_list %}<span class="badge bg-secondary me-1">#{{ tag }}</span>{% endfor %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="fw-bold">Plan a Trip</td>
+                    {% for d in destinations %}
+                    <td class="text-center">
+                        <a href="{% url 'planner:ai_trip_planner' %}?destination={{ d.id }}" class="btn btn-sm btn-outline-dark">Build Itinerary</a>
+                    </td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% elif destinations %}
+    <div class="alert alert-info">Pick at least 2 destinations to compare.</div>
+    {% else %}
+    <div class="alert alert-info">Select two or more destinations above and click Compare to see them side by side.</div>
+    {% endif %}
+</div>
+{% endblock %}

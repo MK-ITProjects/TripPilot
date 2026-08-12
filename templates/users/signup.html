@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sign Up{% endblock %}
+{% block navbar_class %}d-none{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="auth-topbar-decor"></div>
+<div class="auth-page-wrap">
+    <a href="{% url 'home' %}" class="auth-close-btn"><i class="fa-solid fa-xmark"></i></a>
+
+    <div class="auth-container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="auth-illustration">
+                    <img src="{% static 'images/travel-illustration.svg' %}" class="img-fluid" alt="Travel planning illustration">
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <h1 class="auth-heading">Create Your Account</h1>
+                <p class="auth-subheading mb-4">Build Custom Travel Plans</p>
+
+                <div class="row g-4">
+                    
+
+                   
+                    
+
+                    <div class="col-12 col-md-5">
+                        <form method="post">
+                            {% csrf_token %}
+
+                            <div class="auth-input-group">
+                                {{ form.username }}
+                                <i class="fa-solid fa-user auth-input-icon"></i>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="auth-input-group">
+                                        {{ form.first_name }}
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="auth-input-group">
+                                        {{ form.last_name }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="auth-input-group">
+                                {{ form.email }}
+                                <i class="fa-solid fa-at auth-input-icon"></i>
+                            </div>
+                            <div class="auth-input-group">
+                                {{ form.password1 }}
+                                <i class="fa-solid fa-lock auth-input-icon"></i>
+                            </div>
+                            {% if form.password1.errors %}<div class="text-danger small mb-2">{{ form.password1.errors|striptags }}</div>{% endif %}
+                            <div class="auth-input-group">
+                                {{ form.password2 }}
+                                <i class="fa-solid fa-lock auth-input-icon"></i>
+                            </div>
+                            {% if form.password2.errors %}<div class="text-danger small mb-2">{{ form.password2.errors|striptags }}</div>{% endif %}
+                            {% for field in form %}
+                                {% if field.errors and field.name != 'password1' and field.name != 'password2' %}
+                                    <div class="text-danger small mb-2">{{ field.label }}: {{ field.errors|striptags }}</div>
+                                {% endif %}
+                            {% endfor %}
+
+                            <button type="submit" class="btn btn-tp-primary w-100 py-2 fw-bold mt-2">Create Account</button>
+                        </form>
+                        <p class="text-center mt-3 mb-0">Already have an account? <a href="{% url 'users:login' %}" class="text-tp fw-bold">Sign in</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

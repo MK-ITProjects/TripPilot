@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Privacy Policy{% endblock %}
+{% block content %}
+<div class="tp-hero py-5">
+    <div class="container">
+        <h1>Privacy Policy</h1>
+        <p class="lead">Placeholder privacy notes for this college demo project.</p>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <p>This project stores only what is needed to demonstrate its features: your account details
+            (username, email, hashed password), any trip plans you create, and reviews you leave on destinations.</p>
+
+            <h5 class="fw-bold mt-4">What is stored</h5>
+            <ul>
+                <li>Account info you provide at signup (username, name, email)</li>
+                <li>Trip plans, saved stops and reviews you create while signed in</li>
+                <li>Session cookies used to keep you signed in</li>
+            </ul>
+
+            <h5 class="fw-bold mt-4">What is not done</h5>
+            <p>This demo does not sell or share your data with third parties, and does not run analytics or
+            advertising trackers. It is a local/student deployment, not a production service.</p>
+
+            <h5 class="fw-bold mt-4">Contact</h5>
+            <p>Questions about this demo can be sent through the <a href="{% url 'contact' %}">contact page</a>.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% load static %}
+<div class="tp-budget-breakdown">
+    {% for item in breakdown %}
+    <div class="tp-budget-row">
+        <div class="tp-budget-label"><i class="fa-solid {{ item.icon }} me-2"></i>{{ item.label }}</div>
+        <div class="tp-budget-bar"><div class="tp-budget-bar-fill" style="width: {{ item.percent }}%"></div></div>
+        <div class="tp-budget-amount">&#8377;{{ item.amount }} <span class="text-muted small">({{ item.percent }}%)</span></div>
+    </div>
+    {% endfor %}
+</div>

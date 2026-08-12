@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 520" width="100%" height="100%">
+  <circle cx="260" cy="260" r="220" fill="#e9fdf1"/>
+
+  <!-- plane -->
+  <g transform="translate(60,60) rotate(-18)">
+    <path d="M0 20 L70 8 L120 0 L150 6 L120 16 L70 24 L40 34 L18 30 Z" fill="#1e1e1e"/>
+    <path d="M55 12 L55 -18 L70 12 Z" fill="#1e1e1e"/>
+    <path d="M55 20 L55 40 L68 22 Z" fill="#1e1e1e"/>
+  </g>
+
+  <!-- ground line -->
+  <line x1="70" y1="486" x2="430" y2="486" stroke="#1e1e1e" stroke-width="2"/>
+
+  <!-- suitcase -->
+  <g transform="translate(60,360)">
+    <rect x="0" y="30" width="70" height="95" rx="10" fill="#cfcfcf" stroke="#1e1e1e" stroke-width="2"/>
+    <rect x="20" y="10" width="30" height="24" rx="6" fill="none" stroke="#1e1e1e" stroke-width="2"/>
+    <line x1="0" y1="70" x2="70" y2="70" stroke="#1e1e1e" stroke-width="2"/>
+    <rect x="28" y="55" width="14" height="10" rx="2" fill="#1e1e1e"/>
+  </g>
+
+  <!-- plant -->
+  <g transform="translate(400,400)">
+    <path d="M15 60 C-10 30 0 0 15 -10 C30 0 40 30 15 60 Z" fill="#9adfae"/>
+    <path d="M15 60 C0 40 5 15 15 5 C25 15 30 40 15 60 Z" fill="#38e672"/>
+    <path d="M0 60 h30 v25 a15 15 0 0 1 -30 0 Z" fill="#efefef" stroke="#1e1e1e" stroke-width="2"/>
+  </g>
+
+  <!-- person -->
+  <g transform="translate(150,150)">
+    <!-- raised arm -->
+    <path d="M40 60 L15 15" stroke="#38e672" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="12" cy="10" r="9" fill="#f2c29e"/>
+    <!-- head -->
+    <circle cx="55" cy="30" r="26" fill="#f2c29e"/>
+    <path d="M30 22 Q55 -5 80 22 L78 10 Q55 -2 32 10 Z" fill="#1e1e1e"/>
+    <!-- glasses -->
+    <circle cx="46" cy="32" r="6" fill="none" stroke="#1e1e1e" stroke-width="2"/>
+    <circle cx="64" cy="32" r="6" fill="none" stroke="#1e1e1e" stroke-width="2"/>
+    <line x1="52" y1="32" x2="58" y2="32" stroke="#1e1e1e" stroke-width="2"/>
+    <!-- body -->
+    <path d="M20 65 Q55 45 90 65 L96 190 Q55 210 14 190 Z" fill="#38e672"/>
+    <!-- other arm -->
+    <path d="M88 75 Q120 120 108 175" stroke="#38e672" stroke-width="16" stroke-linecap="round" fill="none"/>
+    <circle cx="107" cy="180" r="9" fill="#f2c29e"/>
+    <!-- legs -->
+    <path d="M35 190 L25 300" stroke="#1e1e1e" stroke-width="20" stroke-linecap="round"/>
+    <path d="M75 190 L85 300" stroke="#1e1e1e" stroke-width="20" stroke-linecap="round"/>
+    <!-- sandals -->
+    <ellipse cx="22" cy="308" rx="16" ry="7" fill="#efefef" stroke="#1e1e1e" stroke-width="2"/>
+    <ellipse cx="88" cy="308" rx="16" ry="7" fill="#efefef" stroke="#1e1e1e" stroke-width="2"/>
+  </g>
+
+  <!-- phone mockup -->
+  <g transform="translate(255,140)">
+    <rect x="0" y="0" width="170" height="330" rx="26" fill="#1e1e1e"/>
+    <rect x="8" y="14" width="154" height="302" rx="14" fill="#e9fdf1"/>
+
+    <rect x="20" y="30" width="130" height="34" rx="6" fill="#38e672"/>
+    <rect x="28" y="40" width="40" height="6" rx="3" fill="#0da43f"/>
+    <rect x="98" y="40" width="40" height="6" rx="3" fill="#0da43f"/>
+
+    <rect x="20" y="74" width="130" height="26" rx="6" fill="#fff" stroke="#38e672"/>
+    <rect x="20" y="104" width="42" height="20" rx="4" fill="#0da43f"/>
+    <rect x="66" y="104" width="42" height="20" rx="4" fill="#51f788"/>
+    <rect x="112" y="104" width="38" height="20" rx="4" fill="#51f788"/>
+
+    <rect x="20" y="134" width="62" height="30" rx="6" fill="#51f788"/>
+    <rect x="88" y="134" width="62" height="30" rx="6" fill="#38e672"/>
+
+    <rect x="20" y="172" width="130" height="22" rx="4" fill="#51f788"/>
+    <rect x="20" y="198" width="130" height="22" rx="4" fill="#51f788"/>
+
+    <rect x="20" y="290" width="70" height="24" rx="4" fill="none" stroke="#0da43f" stroke-width="2"/>
+    <rect x="98" y="286" width="52" height="30" rx="8" fill="#0da43f"/>
+  </g>
+</svg>
