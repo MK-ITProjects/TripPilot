@@ -1,0 +1,8 @@
+cd /d "D:\sem 4\PROJECT\trippilot"
+py -3.12 -m venv env312
+env312\Scripts\activate
+python -m pip --version
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver

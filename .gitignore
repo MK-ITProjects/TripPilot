@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+venv/
+env/
+.venv/
+db.sqlite3
+staticfiles/
+media/
+ml_model/trained_models/
+.env
+*.log
